@@ -91,19 +91,17 @@ for file in $PGSQL_ERR_LOGFILE $PGSQL_SLO_LOGFILE $PGSQL_LOGFILE ; do
   chmod 0640 $file || f_err "Unable to chmod ${file} to 0640"
 done
 
-service postgresql-9.3 initdb | tee $PGSQL_LOGFILE
-service postgresql-9.3 start | tee $PGSQL_LOGFILE
+chown -R postgres:postgres "${DATADIR}"
+chmod 0700 "${DATADIR}"
 
-chown -R postgres:postgres "${DATADIR}" 
-chmod 0755 "${DATADIR}"
-
-sleep 5s
-
+sudo -u postgres /usr/pgsql-9.3/bin/initdb -D ${DATADIR} | tee $PGSQL_LOGFILE
+sleep 3s
+sudo -u postgres /usr/pgsql-9.3/bin/postgres -D ${DATADIR} >$PGSQL_LOGFILE 2>&1 &
+sleep 3s
 sudo -u postgres psql -c "CREATE USER ${DB_USER} WITH PASSWORD '${DB_PASS}';" \
         || f_err "Unable to create user ${DB_USER}"
 sudo -u postgres psql -c "CREATE DATABASE \"${DB_NAME}\";"  \
         || f_err "Unable to create database ${DB_NAME}"
 sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE \"${DB_NAME}\" TO ${DB_USER};" \
         || f_err "Unable to grant privileges on ${DB_NAME} to ${DB_USER}"
-
-service postgresql-9.3 stop | tee $PGSQL_LOGFILE
+sudo -u postgres /usr/pgsql-9.3/bin/pg_ctl stop -D ${DATADIR} | tee $PGSQL_LOGFILE
