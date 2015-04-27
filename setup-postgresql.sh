@@ -1,4 +1,7 @@
-#!/bin/sh
+#!/bin/bash
+
+# setup-postgresql.sh
+# Author: Michael Stealey <michael.j.stealey@gmail.com>
 
 set -x
 
@@ -61,9 +64,8 @@ fi
 
 if [[ ! -f $DB_SECRETS_FILE ]] ; then
 cat << EOF > $DB_SECRETS_FILE
----
-  database: $DB_NAME
-  pgpass: $POSTGRES_PASS
+PGSETUP_DATABASE_NAME: $DB_NAME
+PGSETUP_POSTGRES_PASSWORD: $POSTGRES_PASS
 EOF
 else
   f_warn "A ${DB_SECRETS_FILE} already exists"
