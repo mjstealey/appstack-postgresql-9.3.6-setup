@@ -7,8 +7,7 @@ RUN groupadd -r postgres && useradd -r -g postgres postgres
 
 ENV TERM xterm
 
-RUN rpm -ivh http://yum.postgresql.org/9.3/redhat/rhel-6-x86_64/pgdg-centos93-9.3-1.noarch.rpm && \
-echo -e "\
+RUN echo -e "\
 [EPEL]\n\
 name=Extra Packages for Enterprise Linux \$releasever - \$basearch\n\
 #baseurl=http://download.fedoraproject.org/pub/epel/\$releasever/\$basearch\n\
@@ -17,8 +16,8 @@ failovermethod=priority\n\
 enabled=1\n\
 gpgcheck=0\n\
 " >> /etc/yum.repos.d/epel.repo
-
-RUN yum install -y pwgen hostname postgresql93 postgresql93-server postgresql93-odbc unixODBC sudo && \
+RUN rpm -ivh http://yum.postgresql.org/9.3/redhat/rhel-6-x86_64/pgdg-centos93-9.3-1.noarch.rpm && \
+    yum install -y postgresql93 postgresql93-server postgresql93-odbc unixODBC pwgen hostname  sudo && \
 	yum clean all
 
 ADD setup-postgresql.sh /setup-postgresql.sh 
