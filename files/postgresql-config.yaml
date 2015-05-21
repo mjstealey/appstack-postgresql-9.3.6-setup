@@ -1,0 +1,2 @@
+POSTGRES_PASSWORD: postgres
+INITIAL_DATBASE_NAME: initial_db

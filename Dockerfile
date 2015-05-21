@@ -14,6 +14,9 @@ RUN rpm -ivh http://yum.postgresql.org/9.3/redhat/rhel-6-x86_64/pgdg-centos93-9.
 RUN yum install -y postgresql93 postgresql93-server postgresql93-odbc unixODBC
 RUN yum install -y hostname sudo pwgen
 
-ADD setup-postgresql.sh /setup-postgresql.sh 
+ADD files /files
+ADD scripts /scripts
+WORKDIR /scripts
+RUN chmod a+x *.sh
 
-ENTRYPOINT ["/setup-postgresql.sh"]
+ENTRYPOINT ["/scripts/setup-postgresql.sh"]
